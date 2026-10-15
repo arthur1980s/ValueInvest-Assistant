@@ -72,7 +72,8 @@ $PY $REPO/render_report.py $RD            # → $RD/report.html，单文件自�
 
 - **先做资产映射，再动手**：新增组件前先看 `tools/` 与上游仓库里是否已有等价物——四视角、checklist、分层价格、交叉验证都已存在，本框架只补了**辩论层**。已明确砍掉的 5 个组件（Qlib 因子层 / LangGraph-CrewAI / finance-agent-mcp-server / vectorbt / 因子衰减状态机）及逐条理由见 `README.md`。
 - **合规门要先证明它会拦**：往 `verify_run.py` 加新判据后，先在一个只跑到中途的运行目录上跑一遍，确认那项判 ❌ 再依赖它。一个从来不会 FAIL 的门等于没门。
-- 改了 `datapack.py` 先跑 `datapack.py --verify <run_dir>`；改了渲染器先跑 `--selftest`。
+- 改了 `datapack.py` 先跑 `datapack.py --verify <run_dir>`；改了渲染器先跑 `--selftest`（本地 11 项全绿是第一道防线）。
+- **本地解释器比 CI 新**：本地开发用 3.12、CI 跑 3.11，所以不要在 f-string 表达式里写反斜杠（如 `f"{x.removesuffix('</p>\n')}"`）——3.12 允许、3.11 直接 SyntaxError。这类"本机绿、CI 红"的问题交给 CI 当第二道防线，别指望本地自检发现。
 
 ## 纪律
 

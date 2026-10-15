@@ -1,5 +1,6 @@
 # ValueInvest-Assistant dependencies
-# Python >= 3.10 (developed on 3.12)
+# Python >= 3.11（CI 在 3.11 上验证；本地开发用 3.12）
+# 注意：3.12 才允许 f-string 表达式里出现反斜杠，写 3.11 能跑的代码（CI 会抓）
 #
 # datapack.py  : A股/港股 需要 akshare + pandas；美股路径需要 requests
 # render_report.py : 需要 mistune（markdown → HTML，表格默认支持）

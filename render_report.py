@@ -100,6 +100,14 @@ def esc(s) -> str:
     return html.escape(str(s), quote=True)
 
 
+def inline(text: str) -> str:
+    """单行 markdown → HTML 片段：去掉 mistune 包裹的 <p>...</p>。
+    （不要写成 f-string 里的 removeprefix('</p>\\n')——反斜杠在 f-string 表达式里
+    只有 Python 3.12+ 允许，3.11 会 SyntaxError。CI 就是靠这条抓到的。）"""
+    h = md(text).strip()
+    return h[3:-4] if h.startswith("<p>") and h.endswith("</p>") else h
+
+
 def read(rd: Path, name: str) -> str | None:
     p = rd / name
     return p.read_text(encoding="utf-8") if p.exists() else None
@@ -225,8 +233,7 @@ def render(rd: Path) -> str:
 
     if gaps:
         parts.append('<h2>⚠️ 事实包缺口（不得脑补，引用时须一并声明）</h2><ul>'
-                     + "".join(f"<li>{md(g).removeprefix('<p>').removesuffix('</p>\n').removesuffix('</p>')}</li>"
-                               for g in gaps) + "</ul>")
+                     + "".join(f"<li>{inline(g)}</li>" for g in gaps) + "</ul>")
 
     # ---- ① 四视角
     parts.append("<h2>① 四个分析视角（同一份事实包，互相不可见）</h2>")

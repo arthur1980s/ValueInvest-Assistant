@@ -101,7 +101,7 @@ CI（[`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)）在每
 | [HKUDS/Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) | 35,567 | MIT | 工程纪律（审计层、数字角色声明与核验、准出把关）→ `verify_run.py` 合规门的思路 | **仅借鉴思想，未复制代码** |
 | [quarto-dev/quarto-cli](https://github.com/quarto-dev/quarto-cli) | 6,091 | MIT/其他 | 原方案的报告渲染层（Quarto Dashboards） | **未采用**：`embed-resources: true` 本质就是内联资源，用 `render_report.py`（stdlib + mistune）即可，不为它引入 Quarto CLI + pandoc |
 
-**明确不引入**（评估后判定与本框架目标不合）：[microsoft/qlib](https://github.com/microsoft/qlib)（49,381★）与 [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent)（14,946★）的因子生成侧——目标是 3~10 年基本面判断，日频价量因子与之无关，且两者与本框架完全解耦；此外还砍掉了 LangGraph/CrewAI、finance-agent-mcp-server、vectorbt、因子衰减状态机，逐条理由见第 6 节。
+**明确不引入**（评估后判定与本框架目标不合）：[microsoft/qlib](https://github.com/microsoft/qlib)（49,381★）与 [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent)（14,946★）的因子生成侧——目标是 3~10 年基本面判断，日频价量因子与之无关，且两者与本框架完全解耦；另有若干组件经评估后未引入（LangGraph/CrewAI、finance-agent-mcp-server、vectorbt、因子衰减状态机）。
 
 > `tools/financial_rigor.py` 的头部已写明来源与许可。若你重新分发本项目，请一并保留 `LICENSE`（MIT）与 [`NOTICE`](NOTICE) 中的上游版权声明。
 
@@ -158,20 +158,7 @@ runs/<代码>-<YYYYMMDD>/
 
 ---
 
-## 6. 砍掉了什么，为什么
-
-| 原方案组件 | 决定 | 理由 |
-|---|---|---|
-| Qlib 因子层（380 因子 / 1085 factor.py） | 砍 | 3~10 年基本面判断用不上日频价量因子；挂进来只会制造"看起来量化过"的错觉 |
-| LangGraph / CrewAI | 砍 | 宿主 agent 自带并行子任务 + 文件工件即编排状态，引一套图框架是给 4 个角色建调度平台 |
-| finance-agent-mcp-server | 砍 | 新增免费 MCP ≠ 可交叉验证；取数走已验证的 akshare + 双源规则更硬 |
-| vectorbt 回测引擎 | 砍（保留入口） | 价值投资不需要日频回测；三情景估值用确定性脚本就够 |
-| 因子衰减状态机 | 改写 | 价值版的"衰减"是**论文漂移**（前提假设是否被事实推翻），盯的是买入理由不是因子 IC |
-| Quarto Dashboards 渲染 | 替换 | `render_report.py`（stdlib + mistune）即可做到单文件自包含，不必引入 Quarto CLI + pandoc |
-
----
-
-## 7. 边界（必须与结论一起引用）
+## 6. 边界（必须与结论一起引用）
 
 - 框架**不做判据**：不与量化因子池的结论互相覆盖；冲突时并列保留，交人判断。
 - **AI 输出置信度 ≠ 投资确定性**；信息稀缺标的在报告中必须降级声明。
@@ -181,7 +168,7 @@ runs/<代码>-<YYYYMMDD>/
 
 ---
 
-## 8. 实测记录
+## 7. 实测记录
 
 | 运行 | 标的 | 结果 |
 |---|---|---|
@@ -195,7 +182,7 @@ runs/<代码>-<YYYYMMDD>/
 
 ---
 
-## 9. 许可
+## 8. 许可
 
 MIT（见 [`LICENSE`](LICENSE)）。仓库内含一份来自 `xbtlin/ai-berkshire` 的 MIT 代码（`tools/financial_rigor.py`），其版权声明保留在 [`NOTICE`](NOTICE) 与该文件头部。
 
