@@ -84,16 +84,35 @@ footer{margin-top:48px;padding-top:16px;border-top:1px solid var(--line);color:v
 HEAD = re.compile(r"^(#+)(\s)", re.M)
 
 
+_MF = None
+
+
+def _md_factory():
+    """mistune 渲染器（escape=True）。
+
+    为什么必须 escape：**mistune 默认把 Markdown 里的裸 HTML 原样输出**，而报告正文
+    来自联网的 LLM 子任务（读 10-K/IR/新闻）。被投毒的来源或子任务写下的
+    `<script>`/`onerror=` 会原样进入最终 HTML 分享件并在打开时执行。
+    escape=True 会把裸 HTML 转义为文本，并把 javascript: 链接改成无害锚点。
+    代价：正文里故意写的裸 HTML 不再生效（本框架的报告全用 Markdown，实测两轮回归无影响）。"""
+    global _MF
+    if _MF is None:
+        import mistune
+        # plugins 必须显式给出：mistune.html() 是「默认插件 + escape=False」的预配置对象，
+        # 而 create_markdown(plugins=None) 不带任何插件（表格会退化成普通段落）。
+        _MF = mistune.create_markdown(escape=True, plugins=["strikethrough", "footnotes", "table"])
+    return _MF
+
+
 def md(text: str, demote: int = 0) -> str:
-    """markdown → html。demote>0 时把标题降级，避免报告内小标题抢占结构层级。
+    """markdown → html（逃逸裸 HTML）。demote>0 时把标题降级，避免报告内小标题抢占结构层级。
     围栏代码块（```…```）不参与降级，否则会改写里面的注释。"""
     if demote:
         chunks = text.split("```")
         for i in range(0, len(chunks), 2):
             chunks[i] = HEAD.sub(lambda m: "#" * min(6, len(m.group(1)) + demote) + m.group(2), chunks[i])
         text = "```".join(chunks)
-    import mistune
-    return mistune.html(text)
+    return _md_factory()(text)
 
 
 def esc(s) -> str:
@@ -310,6 +329,7 @@ def selftest() -> int:
         ("事实包" in doc and "01-business.md" in doc and "09-decision.md" in doc, "章节与工件名在位"),
         ("<table>" in doc, "表格渲染成功（mistune）"),
         ("定位声明：观测层" in doc, "观测层边界声明在位"),
+        ("<script" not in doc, "最终文档不含 <script（无裸 HTML 注入）"),
     ]
     bad = [n for ok, n in checks if not ok and n]
     for ok, n in checks:
@@ -332,8 +352,12 @@ def selftest() -> int:
           verdict_class("通过（分层建仓）"), verdict_class("")]
     ok4 = vc == ["fail", "grey", "pass", "grey"]
     print(f"  {'✅' if ok4 else '❌'} 结论上色（混合结论取首个判定词）")
-    if bad or not ok2 or not ok3 or not ok4:
-        print(f"\n自测 FAIL: {bad or ['空目录降级' if not ok2 else '三档抽取' if not ok3 else '结论上色']}")
+    # 裸 HTML 必须被逃逸（报告正文来自联网 LLM，内容是半可信输入）
+    e = md("<script>alert(1)</script>\n\n<img src=x onerror=alert(1)>")
+    ok5 = "<script" not in e and "<img" not in e and "&lt;script&gt;" in e and "&lt;img" in e
+    print(f"  {'✅' if ok5 else '❌'} 裸 HTML 逃逸（XSS 防线）")
+    if bad or not ok2 or not ok3 or not ok4 or not ok5:
+        print(f"\n自测 FAIL: {bad or ['空目录降级' if not ok2 else '三档抽取' if not ok3 else '结论上色' if not ok4 else 'HTML 逃逸']}")
         return 1
     print(f"\n自测 PASS（{len(doc) / 1024:.1f} KB 单文件）")
     return 0

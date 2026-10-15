@@ -70,11 +70,11 @@ python verify_run.py runs/T-20261014 # compliance gate
 python datapack.py --verify runs/T-20261014   # offline fact-pack structure check
 ```
 
-CI ([`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)) runs **6 steps** on every push / PR to `main`, with the acceptance criteria **pre-registered**:
+CI ([`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)) runs **8 steps** on every push / PR to `main`, with the acceptance criteria **pre-registered**:
 
-1. syntax compile (`py_compile`, no deps, fails fast on syntax errors); 2. `pip install -r requirements.txt` (proves the documented environment resolves on a clean runner); 3. renderer self-check (11 assertions); 4. compliance gate PASS; 5. offline fact-pack structure check; 6. deterministic calculation tool executable.
+1. syntax compile (`py_compile`, no deps); 2. `pip install -r requirements.txt`; 3. renderer self-check (13 assertions); 4. compliance gate PASS; 5. offline fact-pack structure check; 6. deterministic calculation tool executable; 7. content hygiene scan (local paths / env names / private emails); 8. dependency audit (pip-audit).
 
-**All 6 green = PASS; any non-zero = FAIL, no automatic retry; 10-minute timeout = FAIL (anti-hang).**
+**All 8 green = PASS; any non-zero = FAIL, no automatic retry; 10-minute timeout = FAIL (anti-hang).**
 
 > **What CI does *not* mean:** it only runs the **example runs shipped in the repo** (`runs/T-20261014`, `runs/VZ-20261014`) — no network fetching, no full data pipeline, no multi-ticker batch. It proves "**code runs + example reproduces**", **not** "the framework is correct on full data"; the latter is a manual six-step run per `SKILL.md` (local self-check green is the first line of defence, CI is the second). The badge reflects only the most recent push.
 
@@ -186,3 +186,22 @@ Round 2 of the debate has a fixed four-part structure; missing any part fails th
 MIT — see [`LICENSE`](LICENSE). The repository contains one MIT-licensed file from `xbtlin/ai-berkshire` (`tools/financial_rigor.py`); its copyright notice is retained in the file header and in [`NOTICE`](NOTICE).
 
 中文说明: [`README.md`](README.md)
+
+---
+
+---
+
+## 9. Security notes (self-audit of this public repo)
+
+Scope: every tracked file byte-scanned, **every commit snapshot (including deleted content)**, the file list GitHub actually serves, and the public Actions logs. Result: **no secret or credential leakage**; two real issues were found and fixed (machine paths in an example run; raw-HTML escaping — see below).
+
+| Item | Status |
+|---|---|
+| Secrets / credentials | **None.** The SEC contact email comes from the `VALUEINVEST_SEC_UA` env var — never hard-coded or committed |
+| Raw HTML / XSS | `render_report.py` uses `mistune(escape=True)`: report bodies come from **network-fetching LLM sub-tasks (semi-trusted input)**, so raw `<script>` / `onerror=` is escaped to text and `javascript:` links are replaced with harmless anchors |
+| Use of `eval` | **One occurrence**, in the third-party `tools/financial_rigor.py` (upstream's `calc` subcommand): `eval(expr, {"__builtins__": {}}, {})`, with the expression typed by you on the command line. **It is not a real sandbox** (empty builtins can still be bypassed via attribute chains) — never feed it untrusted text |
+| Dependency vulnerabilities | CI step 8: `pip-audit -r requirements.txt` — currently **no known vulnerabilities**; when a CVE lands, handle it by upgrading or an explicit `--ignore-vuln` with a written reason, never by weakening the criterion |
+| Machine info | CI step 7 continuously scans for local paths / env names / private repo names / private emails; both example runs are redacted |
+| Network | HTTPS everywhere (SEC EDGAR / Nasdaq / akshare sources); no certificate-verification bypass |
+| CI supply chain | All Actions pinned to commit SHAs (tags can be moved upstream) |
+| License | MIT; third-party file (`tools/financial_rigor.py`) notice retained in [`NOTICE`](NOTICE) |

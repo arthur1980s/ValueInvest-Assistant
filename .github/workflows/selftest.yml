@@ -15,8 +15,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10          # 超时即 FAIL（防挂死），不重试
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      # Action 固定到 commit SHA（防上游 tag 被移动/篡改）：注释里保留人类可读版本号
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065   # v5.6.0
         with:
           python-version: '3.11'
 
@@ -55,3 +56,10 @@ jobs:
             exit 1
           fi
           echo "✅ 未发现本机路径、环境名或私有邮箱"
+
+      # 8) 依赖漏洞扫描（判据预注册：有已知漏洞即 FAIL；若某天因上游依赖的公开 CVE 而长期红，
+      #    处理方式是升级依赖或显式 --ignore-vuln 并在提交信息写明理由，不是改成 || true）
+      - name: 依赖漏洞扫描（pip-audit）
+        run: |
+          python -m pip install -q pip-audit
+          python -m pip_audit -r requirements.txt --progress-spinner off

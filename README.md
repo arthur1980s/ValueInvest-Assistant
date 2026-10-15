@@ -71,11 +71,11 @@ python verify_run.py runs/T-20261014 # 合规门
 python datapack.py --verify runs/T-20261014   # 事实包离线结构校验
 ```
 
-CI（[`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)）在每次 push / PR 到 `main` 时跑 **6 步**，判据**预先注册**：
+CI（[`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)）在每次 push / PR 到 `main` 时跑 **8 步**，判据**预先注册**：
 
-1. 语法编译（`py_compile`，不装依赖，先暴露语法错）；2. `pip install -r requirements.txt`（验证文档化环境可在干净 runner 复现）；3. 渲染器自检 11 项；4. 合规门 PASS；5. 事实包离线结构校验；6. 确定性计算工具可执行。
+1. 语法编译（`py_compile`，不装依赖，先暴露语法错）；2. `pip install -r requirements.txt`（验证文档化环境可在干净 runner 复现）；3. 渲染器自检 13 项；4. 合规门 PASS；5. 事实包离线结构校验；6. 确定性计算工具可执行；7. 公开内容卫生扫描（本机路径/环境名/私有邮箱）；8. 依赖漏洞扫描（pip-audit）。
 
-**6 步全绿 = PASS；任一步非 0 = FAIL，不自动重试；超时 10 分钟 = FAIL（防挂死）。**
+**8 步全绿 = PASS；任一步非 0 = FAIL，不自动重试；超时 10 分钟 = FAIL（防挂死）。**
 
 > **CI 的边界（不要误读 badge）**：CI 只跑**随仓库发布的示例运行**（`runs/T-20261014`、`runs/VZ-20261014`），**不跑**任何联网取数、不跑全量数据管道、不跑多标的批量分析。它证明的是"**代码可运行 + 示例可复现**"，**不是**"框架在全量数据上正确"。后者只能在本地按 `SKILL.md` 的六步手动跑（第一步就是本地 11 项全绿，CI 是第二道防线）。badge 只反映最近一次 push 的结果。
 
@@ -187,3 +187,22 @@ runs/<代码>-<YYYYMMDD>/
 MIT（见 [`LICENSE`](LICENSE)）。仓库内含一份来自 `xbtlin/ai-berkshire` 的 MIT 代码（`tools/financial_rigor.py`），其版权声明保留在 [`NOTICE`](NOTICE) 与该文件头部。
 
 English README: [`README_EN.md`](README_EN.md)
+
+---
+
+---
+
+## 9. 安全说明（公开仓自审）
+
+审计范围：全部被跟踪文件逐字节扫描、**每个 commit 的历史快照（含已删除内容）**、GitHub 实际发布面文件清单、Actions 公开日志。结论：**无密钥/口令泄漏**，两条真实问题已修（示例运行中的本机路径已脱敏；渲染器裸 HTML 转义见下）。
+
+| 项 | 状态 |
+|---|---|
+| 密钥 / 口令 | **无**。SEC 联系邮箱走 `VALUEINVEST_SEC_UA` 环境变量，不硬编码、不入库 |
+| 裸 HTML / XSS | `render_report.py` 使用 `mistune(escape=True)`：报告正文来自**联网的 LLM 子任务（半可信输入）**，`<script>` / `onerror=` 等裸 HTML 会被转义为文本，`javascript:` 链接被替换为无害锚点 |
+| `eval` 的使用 | **有一处**，在第三方工具 `tools/financial_rigor.py`（上游代码的 `calc` 子命令）：`eval(expr, {"__builtins__": {}}, {})`，表达式由你在命令行自己输入。**这不是真正的沙箱**（空 builtins 仍可被属性链绕过），因此不要把不可信文本喂给它 |
+| 依赖漏洞 | CI 第 8 步 `pip-audit -r requirements.txt`，当前**无已知漏洞**；有 CVE 时按预注册判据处置（升级依赖或显式 `--ignore-vuln` 并写明理由），不改判据 |
+| 本机信息 | CI 第 7 步持续扫描本机路径 / 环境名 / 私有仓库名 / 私有邮箱；两个示例运行已脱敏 |
+| 网络 | 全部 HTTPS（SEC EDGAR / Nasdaq / akshare 数据源），不绕过证书校验 |
+| CI 供应链 | 所有 Action 固定到 commit SHA（防上游 tag 被移动） |
+| 许可 | MIT；第三方文件（`tools/financial_rigor.py`）版权声明保留在 [`NOTICE`](NOTICE) |

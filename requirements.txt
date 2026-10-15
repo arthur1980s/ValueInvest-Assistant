@@ -6,7 +6,9 @@
 # render_report.py : 需要 mistune（markdown → HTML，表格默认支持）
 # verify_run.py / tools/financial_rigor.py : 纯标准库，无依赖
 
-akshare>=1.16
+# akshare 接口随上游数据源漂移而频繁发版：不精确锁定（否则一个接口修复要等我们改版本号），
+# 但加上界，避免跨大版本时取数字段口径突变而静默出错。
+akshare>=1.18,<2.0
 pandas>=2.0
 requests>=2.31
 mistune>=3.0
