@@ -16,6 +16,8 @@ facts.json / facts.md，避免"多头一套数、空头另一套数"的假辩论
 
 依赖：akshare + pandas（A股/港股）、requests（美股）。见 requirements.txt。
 """
+from __future__ import annotations   # 让 `Path | None` 这类 PEP 604 注解在 Python 3.9 上也能加载
+                                      # （本机默认 python3 可能是 3.9，没有这行会在 import 阶段就 TypeError）
 import argparse
 import json
 import os

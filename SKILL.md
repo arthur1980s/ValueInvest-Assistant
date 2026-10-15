@@ -93,6 +93,7 @@ $PY $REPO/render_report.py $RD            # → $RD/report.html，单文件自�
 | 子 Agent 引用 facts 之外的数据（批价、合同负债、税收条文） | 这是分工设计（facts 管数字，联网管时效事实），但二级转引必须标 ⚠️ 待核 |
 | 报告之间出现"ROE 6.8% vs RoTCE 13%"式矛盾 | 先对齐期间再比大小（两者分别是不同期间），把基准期间摆出来再谈贵贱 |
 | 辩论第 2 轮必须把对手第 1 轮喂回去 | 否则不会出现"立场是否改变"的真让步 |
+| **本机 `python3` 可能是 3.9**（agent 运行环境不一定是你的开发环境；实测 DSH 的 bash 里 `python3` = 3.9.25） | `Path \| None` 这类 PEP 604 注解在 3.9 上会在 **import 阶段**就 `TypeError`（脚本一行都没跑）。脚本已加 `from __future__ import annotations` 兜底；真实取数路径仍需 **Python 3.11+**（见 requirements.txt）。排查"在别的环境跑不动"先报解释器版本 |
 
 ## 美股路径要点
 
