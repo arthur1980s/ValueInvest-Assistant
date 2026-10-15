@@ -112,7 +112,7 @@ ROE 中枢 ~17–25%，但 2023 因减值掉到 12.5%。剔除一次性后 ROE �
 
 命令：
 ```
-~/miniconda3/envs/futu_env/bin/python financial_rigor.py three-scenario \
+python financial_rigor.py three-scenario \
   --price 44.42 --eps 3.84 --shares 4.218 --growth 0.03 0.01 -0.02 --pe 15 11 9 --years 3 --currency USD
 ```
 

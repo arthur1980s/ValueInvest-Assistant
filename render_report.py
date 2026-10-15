@@ -3,13 +3,13 @@
 
 设计取舍（替代原方案的 Quarto Dashboards）：
   - Quarto 的 embed-resources: true 本质就是「把 CSS/JS 内联」，本脚本用 stdlib + mistune 直接做到，
-    省掉 Quarto CLI + pandoc 依赖；渲染引擎用 futu_env 里已有的 mistune 3.3（表格默认支持）。
+    省掉 Quarto CLI + pandoc 依赖；渲染引擎用已安装的 mistune 3.x（表格默认支持）。
   - 图表不引 Plotly（自包含得内联 ~3.5MB JS），评分/区间用纯 CSS 条形；要真图时再议。
   - 只读运行目录，不改任何工件；缺文件的运行（跑到中途）也能渲染，缺项显式标注。
 
 用法：
-  ~/miniconda3/envs/futu_env/bin/python render_report.py <run_dir> [-o report.html]
-  ~/miniconda3/envs/futu_env/bin/python render_report.py --selftest
+  python render_report.py <run_dir> [-o report.html]
+  python render_report.py --selftest
 """
 from __future__ import annotations
 

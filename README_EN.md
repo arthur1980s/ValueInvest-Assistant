@@ -60,7 +60,7 @@ python render_report.py --selftest            # renderer self-check (10 assertio
 - [`runs/T-20261014/`](runs/T-20261014/) — AT&T Inc. (NYSE: T), cutoff 2026-10-14, gate PASS, verdict "fail — no entry at $22.85"
 - [`runs/VZ-20261014/`](runs/VZ-20261014/) — Verizon (NYSE: VZ), cutoff 2026-10-14, gate PASS, verdict "grey zone — no entry at $44.42; a pass (tiered) below $40.00", including `09-verification-basis.txt` (raw verification output)
 
-Open either `report.html` directly in a browser.
+Open either `report.html` directly in a browser. Machine paths / environment names were redacted before publishing and are checked continuously by CI step 7 (no local paths, environment names, private repo names or private emails may enter this repo).
 
 ### Self-check & CI (scope boundary)
 
@@ -100,7 +100,7 @@ Coverage:
 | [HKUDS/Vibe-Trading](https://github.com/HKUDS/Vibe-Trading) | 35,567 | MIT | Engineering discipline: audit layer, numeric-role declaration and verification, release gating → the idea behind `verify_run.py` | **Ideas only, no code copied** |
 | [quarto-dev/quarto-cli](https://github.com/quarto-dev/quarto-cli) | 6,091 | MIT/other | The original plan's report layer (Quarto Dashboards) | **Not adopted:** `embed-resources: true` is just resource inlining; `render_report.py` (stdlib + mistune) does it without pulling in Quarto CLI + pandoc |
 
-**Explicitly not included** (evaluated and rejected as a poor fit): the factor-generation side of [microsoft/qlib](https://github.com/microsoft/qlib) (49,381★) and [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent) (14,946★) — the target is 3–10 year fundamental judgement, daily price/volume factors are irrelevant to it, and those two are fully decoupled from this framework. Also dropped: LangGraph/CrewAI, finance-agent-mcp-server, vectorbt, and the factor-decay state machine (reasons in section 6).
+**Explicitly not included** (evaluated and rejected as a poor fit): the factor-generation side of [microsoft/qlib](https://github.com/microsoft/qlib) (49,381★) and [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent) (14,946★) — the target is 3–10 year fundamental judgement, daily price/volume factors are irrelevant to it, and those two are fully decoupled from this framework. Also not adopted: LangGraph/CrewAI, finance-agent-mcp-server, vectorbt and the factor-decay state machine.
 
 > `tools/financial_rigor.py` carries a provenance header. If you redistribute this project, keep [`LICENSE`](LICENSE) (MIT) and the upstream copyright notice in [`NOTICE`](NOTICE).
 
@@ -157,20 +157,7 @@ Round 2 of the debate has a fixed four-part structure; missing any part fails th
 
 ---
 
-## 6. What was dropped, and why
-
-| Component from the original plan | Decision | Reason |
-|---|---|---|
-| Qlib factor layer (380 factors / 1085 factor.py) | Dropped | Daily price/volume factors are irrelevant to 3–10 year fundamental judgement; attaching it would manufacture a false sense of "having quantified it" |
-| LangGraph / CrewAI | Dropped | The host agent already has parallel sub-agents, and file artifacts *are* the orchestration state |
-| finance-agent-mcp-server | Dropped | Another free MCP server is not cross-validation; verified akshare + dual-source rules are stronger |
-| vectorbt backtest engine | Dropped (entry kept) | Value investing does not need daily backtests; three-scenario valuation with a deterministic script suffices |
-| Factor-decay state machine | Rewritten | The value-investing analogue of "decay" is **thesis drift** (were the premises falsified), tracked against the buy thesis, not factor IC |
-| Quarto Dashboards rendering | Replaced | `render_report.py` (stdlib + mistune) already produces a self-contained single file |
-
----
-
-## 7. Boundaries (must be cited together with any conclusion)
+## 6. Boundaries (must be cited together with any conclusion)
 
 - The framework **does not adjudicate**: it never overrides quantitative factor-pool conclusions; conflicts are kept side by side for a human to judge.
 - **AI confidence ≠ investment certainty**; low-information names must be flagged as such in the report.
@@ -180,7 +167,7 @@ Round 2 of the debate has a fixed four-part structure; missing any part fails th
 
 ---
 
-## 8. Field record
+## 7. Field record
 
 | Run | Ticker | Outcome |
 |---|---|---|
@@ -194,7 +181,7 @@ Round 2 of the debate has a fixed four-part structure; missing any part fails th
 
 ---
 
-## 9. License
+## 8. License
 
 MIT — see [`LICENSE`](LICENSE). The repository contains one MIT-licensed file from `xbtlin/ai-berkshire` (`tools/financial_rigor.py`); its copyright notice is retained in the file header and in [`NOTICE`](NOTICE).
 

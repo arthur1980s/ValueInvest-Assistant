@@ -43,3 +43,15 @@ jobs:
       # 6) 确定性计算工具可执行（第三方代码 tools/financial_rigor.py）
       - name: 确定性计算工具
         run: python tools/financial_rigor.py verify-valuation --price 44.42 --eps 3.84 --dividend 2.08
+
+      # 7) 公开内容卫生：禁止本机环境名/家目录/私有仓库名/私有邮箱进入公开仓。
+      #    为什么需要它：同一个脚本在本机与公开仓各存一份，把未脱敏的那份拷回来
+      #    会静默重新引入泄漏（本地自检发现不了）。这条是纯 grep，无依赖。
+      - name: 公开内容卫生扫描（无本机路径/私有邮箱）
+        run: |
+          if grep -rInE 'futu_env|miniconda3|/home/Tiger|~/ai-berkshire|~/\.hermes|goitex|tiger@|id_ed25519' \
+               --exclude-dir=.git --exclude-dir=.github . ; then
+            echo "::error::发现本机路径/环境名/私有邮箱，禁止进入公开仓（逐条脱敏后再提交）"
+            exit 1
+          fi
+          echo "✅ 未发现本机路径、环境名或私有邮箱"
