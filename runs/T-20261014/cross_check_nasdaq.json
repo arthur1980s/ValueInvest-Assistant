@@ -1,0 +1,17 @@
+{
+ "sources": [
+  "Nasdaq api.nasdaq.com/api/company/T/financials?frequency=1 （年度损益/资产负债表，第二来源；注意 T 的接口单位为千美元）",
+  "Nasdaq api.nasdaq.com/api/quote/T/summary （返回为空，无第二市值来源——市值仍为单源）"
+ ],
+ "values": {
+  "nasdaq_unit_note": "Nasdaq 对 T 返回的金额为千美元（$125,648,000 = $125.6B），已换算后与 SEC 百万美元口径对齐"
+ },
+ "compare": {
+  "营收 2025（USD 百万）": {"a": 125648, "b": 125648, "la": "SEC XBRL Revenues", "lb": "Nasdaq Total Revenue（$125,648,000 千美元）", "diff_pct": 0.0},
+  "营收 2024（USD 百万）": {"a": 122336, "b": 122336, "la": "SEC XBRL Revenues", "lb": "Nasdaq Total Revenue", "diff_pct": 0.0},
+  "净利 2025（USD 百万）": {"a": 21953, "b": 21953, "la": "SEC XBRL NetIncomeLoss", "lb": "Nasdaq Net Income（$21,953,000 千美元）", "diff_pct": 0.0},
+  "净利 2024（USD 百万）": {"a": 10948, "b": 10948, "la": "SEC XBRL NetIncomeLoss", "lb": "Nasdaq Net Income", "diff_pct": 0.0},
+  "总资产 2025（USD 百万）": {"a": 420198, "b": 420198, "la": "SEC XBRL Assets", "lb": "Nasdaq Total Assets（$420,198,000 千美元）", "diff_pct": 0.0},
+  "市值（USD）": {"a": 159963189043, "b": null, "la": "Nasdaq 收盘价 × SEC 股本", "lb": "Nasdaq summary 返回为空，无第二来源", "diff_pct": null, "note": "单源，不得声称已双源验证"}
+ }
+}

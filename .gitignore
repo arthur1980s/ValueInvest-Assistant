@@ -1,0 +1,19 @@
+# 运行产物：只保留示例运行 runs/T-20261014，其余不发布
+runs/*
+!runs/T-20261014/
+
+# 取数缓存（SEC companyfacts 可达 10MB，脚本落在 ~/.cache，若改到仓库内则忽略）
+.cache/
+*.cache.json
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# 编辑器/系统
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,63 @@
+{
+ "ticker": "T",
+ "company": "AT&T Inc.",
+ "market": "US",
+ "started": "2026-10-14 16:30:16",
+ "data_cutoff": "2026-10-14",
+ "stages": {
+  "facts": {
+   "status": "done",
+   "at": "2026-10-15 21:28:56",
+   "sources": {
+    "financials": "SEC EDGAR XBRL companyfacts（10-K 年度）",
+    "price": "Nasdaq API api.nasdaq.com/api/quote/<sym>/historical",
+    "second_source": "见 cross_check（若缺则本包为单源：SEC 一手 + Nasdaq 行情）"
+   }
+  },
+  "analysts": {
+   "status": "done",
+   "at": "2026-10-14 18:23:51",
+   "scores": {
+    "01-business": "3/5 灰色偏不通过",
+    "02-financial": "3/5 灰色",
+    "03-industry": "2.5/5 护城河窄",
+    "04-risk": "3.5/5 灰色偏通过"
+   },
+   "corrections": [
+    "任务提示'2025-03-19 宣布 $22B Spectrum 收购'为错误前提, 两个分析师独立核实: 实为 EchoStar 频谱收购, 2025-08-26 宣布, ~$23B 全现金, 2026-07-28 已交割",
+    "02-financial 与 04-risk 关于 2016 年是否削减股息矛盾, 待 R1 空头裁决",
+    "裁决层用 XBRL 钉死剔除一次性 PE: 26.6%税率 EPS 2.15(10.65x)/13.4%税率 EPS 2.53(9.02x)/adjusted 2.12(10.78x 最可信); GAAP 7.5x 是 $5.9B DIRECTV 一次性收益+13.4%低税率假象"
+   ]
+  },
+  "debate_r1": {
+   "status": "done",
+   "at": "2026-10-14 18:40:22",
+   "scores": {
+    "05-bull-r1": "3.5/5",
+    "06-bear-r1": "4/5 (合理区间 $13.5-17.5)"
+   },
+   "divergence": "多头主打 FCF yield 12.15% + 回购缩股本; 空头主打假便宜 PE + 2026 真实 FCF 覆盖 1.15x + 营收5年−12.2%"
+  },
+  "debate_r2": {
+   "status": "done",
+   "at": "2026-10-14 19:09:10",
+   "scores": {
+    "07-bull-r2": "3.0/5 (撤掉$22.85首仓, 改$19-20)",
+    "08-bear-r2": "3.5/5 (区间上调$13.5-18.0)"
+   },
+   "convergence": "双方独立收敛 $22.85 不建仓"
+  },
+  "decision": {
+   "status": "done",
+   "at": "2026-10-14 19:09:10",
+   "verdict": "不通过（现价 $22.85 不建仓）"
+  }
+ },
+ "finished": "2026-10-14 19:09:10",
+ "date": "2026-10-15",
+ "gaps": [
+  "每股分红 2026 仅含 1 个季度（XBRL 未逐季申报全部季度）⇒ 该年 DPS 与据此算出的股息率被**低估**，勿直接当年度分红额使用",
+  "第二独立来源（跨源互验）：yfinance 429 / macrotrends 403 / stockanalysis Cloudflare —— 需在报告中标注为单源",
+  "股东权益（StockholdersEquity）未从 XBRL 取到（公司可能用其他标签）⇒ 本包不算 PB，估值须另取账面"
+ ]
+}

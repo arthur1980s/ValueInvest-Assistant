@@ -1,0 +1,11 @@
+# ValueInvest-Assistant dependencies
+# Python >= 3.10 (developed on 3.12)
+#
+# datapack.py  : A股/港股 需要 akshare + pandas；美股路径需要 requests
+# render_report.py : 需要 mistune（markdown → HTML，表格默认支持）
+# verify_run.py / tools/financial_rigor.py : 纯标准库，无依赖
+
+akshare>=1.16
+pandas>=2.0
+requests>=2.31
+mistune>=3.0
