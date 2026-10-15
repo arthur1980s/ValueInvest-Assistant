@@ -80,7 +80,7 @@ $PY render_report.py --selftest            # 渲染器自检（10 项）
 
 **明确不引入**（评估后判定与本框架目标不合）：[microsoft/qlib](https://github.com/microsoft/qlib)（49,381★）与 [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent)（14,946★）的因子生成侧——目标是 3~10 年基本面判断，日频价量因子与之无关，且两者与本框架完全解耦；此外还砍掉了 LangGraph/CrewAI、finance-agent-mcp-server、vectorbt、因子衰减状态机，逐条理由见第 6 节。
 
-> `tools/financial_rigor.py` 的头部已写明来源与许可。若你重新分发本项目，请一并保留 `LICENSE` 中 MIT 许可与上游版权声明（见 `LICENSE` 的 "Third-Party Notices" 段）。
+> `tools/financial_rigor.py` 的头部已写明来源与许可。若你重新分发本项目，请一并保留 `LICENSE`（MIT）与 [`NOTICE`](NOTICE) 中的上游版权声明。
 
 ---
 
@@ -97,6 +97,7 @@ ValueInvest-Assistant/
 │   └── financial_rigor.py   # 第三方代码（xbtlin/ai-berkshire, MIT）：确定性计算工具
 ├── runs/T-20261014/    # 示例运行（美股 AT&T，合规门 PASS，含 report.html）
 ├── requirements.txt
+├── NOTICE              # 第三方代码来源与版权声明
 └── LICENSE
 ```
 
@@ -171,6 +172,6 @@ runs/<代码>-<YYYYMMDD>/
 
 ## 9. 许可
 
-MIT（见 [`LICENSE`](LICENSE)）。仓库内含一份来自 `xbtlin/ai-berkshire` 的 MIT 代码（`tools/financial_rigor.py`），其版权声明保留在 `LICENSE` 的 Third-Party Notices 段与该文件头部。
+MIT（见 [`LICENSE`](LICENSE)）。仓库内含一份来自 `xbtlin/ai-berkshire` 的 MIT 代码（`tools/financial_rigor.py`），其版权声明保留在 [`NOTICE`](NOTICE) 与该文件头部。
 
 English README: [`README_EN.md`](README_EN.md)

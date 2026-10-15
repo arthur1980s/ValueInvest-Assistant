@@ -19,29 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
-================================================================================
-Third-Party Notices
-================================================================================
-
-1) tools/financial_rigor.py
-   Copied unmodified (except a provenance header comment) from:
-
-     ai-berkshire — https://github.com/xbtlin/ai-berkshire
-     MIT License, Copyright (c) 2026 xbtlin
-
-   The MIT terms reproduced above apply to that file as well, with copyright
-   held by xbtlin. Retain this notice when redistributing.
-
-2) Methodology / ideas borrowed WITHOUT copying code (no license obligation,
-   attribution given for honesty):
-     - TradingAgents (https://github.com/TauricResearch/TradingAgents) — Apache-2.0
-       multi-agent debate between bull and bear researchers
-     - ai-hedge-fund (https://github.com/virattt/ai-hedge-fund) — MIT
-       persona-based investor agents
-     - Vibe-Trading (https://github.com/HKUDS/Vibe-Trading) — MIT
-       engineering discipline for audit / gating layers
-     - Quarto (https://github.com/quarto-dev/quarto-cli) — evaluated for report
-       rendering, NOT used (replaced by the stdlib renderer render_report.py)
-
-3) This project is NOT a GitHub fork of any of the repositories above.

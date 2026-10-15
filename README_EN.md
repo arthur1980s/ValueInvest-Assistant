@@ -79,7 +79,7 @@ Coverage:
 
 **Explicitly not included** (evaluated and rejected as a poor fit): the factor-generation side of [microsoft/qlib](https://github.com/microsoft/qlib) (49,381★) and [microsoft/RD-Agent](https://github.com/microsoft/RD-Agent) (14,946★) — the target is 3–10 year fundamental judgement, daily price/volume factors are irrelevant to it, and those two are fully decoupled from this framework. Also dropped: LangGraph/CrewAI, finance-agent-mcp-server, vectorbt, and the factor-decay state machine (reasons in section 6).
 
-> `tools/financial_rigor.py` carries a provenance header. If you redistribute this project, keep the MIT license and upstream copyright notice (see the "Third-Party Notices" section of [`LICENSE`](LICENSE)).
+> `tools/financial_rigor.py` carries a provenance header. If you redistribute this project, keep [`LICENSE`](LICENSE) (MIT) and the upstream copyright notice in [`NOTICE`](NOTICE).
 
 ---
 
@@ -96,6 +96,7 @@ ValueInvest-Assistant/
 │   └── financial_rigor.py   # third-party (xbtlin/ai-berkshire, MIT): deterministic calculation
 ├── runs/T-20261014/    # example run (AT&T), gate PASS, includes report.html
 ├── requirements.txt
+├── NOTICE              # third-party provenance & copyright
 └── LICENSE
 ```
 
@@ -170,6 +171,6 @@ Round 2 of the debate has a fixed four-part structure; missing any part fails th
 
 ## 9. License
 
-MIT — see [`LICENSE`](LICENSE). The repository contains one MIT-licensed file from `xbtlin/ai-berkshire` (`tools/financial_rigor.py`); its copyright notice is retained in the file header and in the Third-Party Notices section of `LICENSE`.
+MIT — see [`LICENSE`](LICENSE). The repository contains one MIT-licensed file from `xbtlin/ai-berkshire` (`tools/financial_rigor.py`); its copyright notice is retained in the file header and in [`NOTICE`](NOTICE).
 
 中文说明: [`README.md`](README.md)
