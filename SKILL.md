@@ -11,7 +11,7 @@ license: MIT
 **定位：观测层，不是判据层** —— 输出是附加视角，不参与量化因子池判定，不推翻任何既有结论；与既有结论冲突时并列保留，交人判断。
 
 ```
-REPO=<本仓库根目录>        # 例如 export REPO=~/ValueInvest-Assistant
+REPO=<本仓库根目录>        # 被 agent 加载时：skill 的 base directory 就是本仓库根目录，直接用它
 PY=<你的 python>           # 需 akshare/pandas/requests/mistune，见 requirements.txt
 ```
 
