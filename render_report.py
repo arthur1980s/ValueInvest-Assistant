@@ -3,13 +3,13 @@
 
 设计取舍（替代原方案的 Quarto Dashboards）：
   - Quarto 的 embed-resources: true 本质就是「把 CSS/JS 内联」，本脚本用 stdlib + mistune 直接做到，
-    省掉 Quarto CLI + pandoc 依赖；渲染引擎用已安装的 mistune 3.x（表格默认支持）。
+    省掉 Quarto CLI + pandoc 依赖；渲染引擎用 futu_env 里已有的 mistune 3.3（表格默认支持）。
   - 图表不引 Plotly（自包含得内联 ~3.5MB JS），评分/区间用纯 CSS 条形；要真图时再议。
   - 只读运行目录，不改任何工件；缺文件的运行（跑到中途）也能渲染，缺项显式标注。
 
 用法：
-  python render_report.py <run_dir> [-o report.html]
-  python render_report.py --selftest
+  ~/miniconda3/envs/futu_env/bin/python render_report.py <run_dir> [-o report.html]
+  ~/miniconda3/envs/futu_env/bin/python render_report.py --selftest
 """
 from __future__ import annotations
 
@@ -116,12 +116,16 @@ def score_num(s: str | None) -> float | None:
     return float(m.group(1)) if m else None
 
 
+VERDICT_WORDS = [("不通过", "fail"), ("不建仓", "fail"), ("回避", "fail"), ("卖出", "fail"), ("不建议", "fail"),
+                 ("灰色", "grey"), ("观望", "grey"),
+                 ("通过", "pass"), ("买入", "pass"), ("建仓", "pass")]
+
+
 def verdict_class(v: str) -> str:
-    if re.search(r"不通过|回避|卖出|不建议", v):
-        return "fail"
-    if re.search(r"通过|买入|建仓", v):
-        return "pass"
-    return "grey"
+    """按结论里**最先出现**的判定词上色（同一位置取更长的词，如「不建仓」优先于「建仓」）。
+    不要只看包含关系：'灰色地带——现价不建仓；$40 以下转为通过' 这类混合结论会判错色。"""
+    hits = [(v.find(w), -len(w), c) for w, c in VERDICT_WORDS if w in v]
+    return min(hits)[2] if hits else "grey"
 
 
 def tiers(text: str | None) -> list[tuple[str, str]]:
@@ -315,8 +319,14 @@ def selftest() -> int:
     ok3 = ([l for l, _ in tt] == ["激进", "保守"] and "|" not in "".join(b for _, b in tt)
            and tt[0][1].startswith("$19"))
     print(f"  {'✅' if ok3 else '❌'} 三档抽取（去竖线 + 排序）")
-    if bad or not ok2 or not ok3:
-        print(f"\n自测 FAIL: {bad or ['空目录降级' if not ok2 else '三档抽取']}")
+    # 结论上色：按最先出现的判定词，混合结论（灰色+不建仓+通过）不得判成绿
+    vc = [verdict_class("不通过（现价 $22.85 不建仓）"),
+          verdict_class("灰色地带 —— 现价 $44.42 不建仓; $40.00 及以下转为通过(分层)"),
+          verdict_class("通过（分层建仓）"), verdict_class("")]
+    ok4 = vc == ["fail", "grey", "pass", "grey"]
+    print(f"  {'✅' if ok4 else '❌'} 结论上色（混合结论取首个判定词）")
+    if bad or not ok2 or not ok3 or not ok4:
+        print(f"\n自测 FAIL: {bad or ['空目录降级' if not ok2 else '三档抽取' if not ok3 else '结论上色']}")
         return 1
     print(f"\n自测 PASS（{len(doc) / 1024:.1f} KB 单文件）")
     return 0
