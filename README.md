@@ -1,5 +1,7 @@
 # ValueInvest-Assistant
 
+[![selftest](https://github.com/arthur1980s/ValueInvest-Assistant/actions/workflows/selftest.yml/badge.svg)](https://github.com/arthur1980s/ValueInvest-Assistant/actions/workflows/selftest.yml)  ![license](https://img.shields.io/badge/license-MIT-blue.svg)
+
 **多视角对抗、强制给结论、工程化验证的价值投资研究框架** —— 以 Skill 形态交付，任何兼容 agent（Hermes / Claude Code / Codex 等）都能加载调用，最终产出一份**单文件、离线可开**的 HTML 研究报告。
 
 > **定位：观测层 + 展示层，不是判据层。** 输出是附加视角，不参与量化因子池判定、不推翻任何既有结论；与既有结论冲突时并列保留，交人判断。只读、不推翻、不判定。
@@ -54,7 +56,28 @@ $PY render_report.py runs/T-$(date +%Y%m%d)
 $PY render_report.py --selftest            # 渲染器自检（10 项）
 ```
 
-**示例运行**：[`runs/T-20261014/`](runs/T-20261014/) —— 美股 AT&T（NYSE: T），数据截止 2026-10-14，合规门 PASS。直接双击 [`report.html`](runs/T-20261014/report.html) 即可查看成品报告
+**示例运行**
+
+- [`runs/T-20261014/`](runs/T-20261014/) —— 美股 AT&T（NYSE: T），数据截止 2026-10-14，合规门 PASS，结论「不通过（现价 $22.85 不建仓）」
+- [`runs/VZ-20261014/`](runs/VZ-20261014/) —— 美股 Verizon（NYSE: VZ），数据截止 2026-10-14，合规门 PASS，结论「灰色地带 —— 现价 $44.42 不建仓，$40.00 及以下转为通过（分层）」，含 `09-verification-basis.txt`（核验原文）
+
+两份都可以直接双击 `report.html` 查看成品。
+
+### 自检与 CI（范围边界）
+
+```bash
+python render_report.py --selftest   # 渲染器自检：11 项断言
+python verify_run.py runs/T-20261014 # 合规门
+python datapack.py --verify runs/T-20261014   # 事实包离线结构校验
+```
+
+CI（[`.github/workflows/selftest.yml`](.github/workflows/selftest.yml)）在每次 push / PR 到 `main` 时跑 **6 步**，判据**预先注册**：
+
+1. 语法编译（`py_compile`，不装依赖，先暴露语法错）；2. `pip install -r requirements.txt`（验证文档化环境可在干净 runner 复现）；3. 渲染器自检 11 项；4. 合规门 PASS；5. 事实包离线结构校验；6. 确定性计算工具可执行。
+
+**6 步全绿 = PASS；任一步非 0 = FAIL，不自动重试；超时 10 分钟 = FAIL（防挂死）。**
+
+> **CI 的边界（不要误读 badge）**：CI 只跑**随仓库发布的示例运行**（`runs/T-20261014`、`runs/VZ-20261014`），**不跑**任何联网取数、不跑全量数据管道、不跑多标的批量分析。它证明的是"**代码可运行 + 示例可复现**"，**不是**"框架在全量数据上正确"。后者只能在本地按 `SKILL.md` 的六步手动跑（第一步就是本地 11 项全绿，CI 是第二道防线）。badge 只反映最近一次 push 的结果。
 
 支持范围：
 
@@ -95,7 +118,9 @@ ValueInvest-Assistant/
 ├── render_report.py    # ⑥ 运行目录 → 单文件自包含 HTML（只读）；--selftest 自检
 ├── tools/
 │   └── financial_rigor.py   # 第三方代码（xbtlin/ai-berkshire, MIT）：确定性计算工具
+├── .github/workflows/  # 轻量自检 CI（6 步，只跑示例，不联网）
 ├── runs/T-20261014/    # 示例运行（美股 AT&T，合规门 PASS，含 report.html）
+├── runs/VZ-20261014/   # 示例运行（美股 Verizon，结论「灰色地带」，含核验原文）
 ├── requirements.txt
 ├── NOTICE              # 第三方代码来源与版权声明
 └── LICENSE
@@ -164,9 +189,9 @@ runs/<代码>-<YYYYMMDD>/
 | 贵州茅台 600519 | A股 | 首跑即由多头第 1 轮抓出事实包口径错误（股息率单次口径 2.22% vs TTM 4.12%），脚本已修 |
 | 腾讯 00700 | 港股 | 快照级取数通过；5 年财报序列明确报缺 |
 | 花旗集团 C | 美股 | 首个美股标的；发现 SEC companyfacts 滞后，改为"年报 + 最新 10-Q 原文"，并列 FY/TTM/单季年化三个 PE 口径 |
-| Verizon VZ | 美股 | 四视角 + 辩论第 1 轮完成；两个任务前提错误（不存在的合作、与 10-K 不符的债务数字）被分析师独立核实纠正 |
+| Verizon VZ | 美股 | **已跑完并随仓库发布**（`runs/VZ-20261014`）：四视角均分 3.0，两轮辩论后多头 3.5→3.0、空头 2.0→2.5，结论「灰色地带」；两个任务前提错误（不存在的合作、与 10-K 不符的债务数字）被分析师独立核实纠正 |
 
-> 除 `runs/T-20261014` 外，上述运行为开发期记录，完整工件未随本仓库发布。
+> 除 `runs/T-20261014` 与 `runs/VZ-20261014` 外，上述运行为开发期记录，完整工件未随本仓库发布。
 
 ---
 

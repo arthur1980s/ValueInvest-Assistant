@@ -1,0 +1,80 @@
+{
+ "ticker": "VZ",
+ "name": "VERIZON COMMUNICATIONS INC",
+ "market": "US",
+ "cik": 732712,
+ "data_cutoff": "2026-10-14",
+ "run_date": "2026-10-15 21:31:23",
+ "stages": {
+  "facts": {
+   "status": "done",
+   "at": "2026-10-15 21:31:23",
+   "sources": {
+    "financials": "SEC EDGAR XBRL companyfacts（10-K 年度）+ 10-Q 原文（2Q26）",
+    "price": "Nasdaq API /api/quote/VZ/historical",
+    "second_source": "Nasdaq /api/company/VZ/financials?frequency=1（营收/净利/总资产 0.00% 一致；市值单源）"
+   }
+  },
+  "analysts": {
+   "status": "done",
+   "at": "2026-10-16 01:15:47",
+   "scores": {
+    "01-business": "3/5 灰色偏不通过",
+    "02-financial": "2.5/5 灰色",
+    "03-industry": "3/5 护城河中等(2025年被数据证伪过)",
+    "04-risk": "3/5 灰色"
+   },
+   "corrections": [
+    "任务提示'CoreWeave 算力合作'不存在——04-risk 多轮检索无果, 实际是 Verizon-Corning 30 年光纤协议(附 URL)",
+    "任务提示 Frontier '$9.6B+$10B 债务' 与 10-K 原文不符——实为现金 $9.8B + 承接债务公允价值 $12.9B(10-K Note 3)",
+    "02-financial 补齐 facts 缺口: 股东权益 $105.7B(XBRL), PB 1.77x, 净债务 $139.1B, FCF 五年 $19-20B"
+   ]
+  },
+  "debate_r1": {
+   "status": "done",
+   "at": "2026-10-16 01:41:19",
+   "scores": {
+    "05-bull-r1": "3.5/5 ($44.42 硬安全边际, 10年FCF覆盖市值107%)",
+    "06-bear-r1": "2/5 (合理区间 $34-42, 自认赔率偏负)"
+   },
+   "key_claims": {
+    "bull": [
+     "中性重跑$59.9(02的$43.5三假设过时)",
+     "2Q26指引二次上调$4.99-5.04",
+     "10Y利率5.21%下10.74%FCF yield",
+     "证伪检验=Q3单季净增<150K且churn>1.55%"
+    ],
+    "bear": [
+     "Frontier给Business加回$1,784M商誉(1Q26 10-Q)",
+     "2Q26持有待售$746M=国际有线互联/托管网络",
+     "净无担保债$128.7B/2.5x是新基线非降杠杆",
+     "10.74%FCF yield价值陷阱算术(capex刚性+零回购+57%payout)"
+    ]
+   }
+  },
+  "debate_r2": {
+   "status": "done",
+   "at": "2026-10-16 02:06:00",
+   "scores": {
+    "07-bull-r2": "3.0/5 (建仓线从现价下移至 $40.00, 弱多不变)",
+    "08-bear-r2": "2.5/5 (合理区间 $34-42 维持, 附条件上移规则→$45)"
+   },
+   "convergence": "两方独立动作指向同一当下结论: $44.42 不是建仓价 (多头只留 ≤5% 观察仓并下调建仓线, 空头区间上界 $42 在现价之下)",
+   "unresolved": "FCF 可分配性(分母纯度)未裁决 —— 需 2026 10-K 非 GAAP FCF 对账表, 本轮未取到"
+  },
+  "decision": {
+   "status": "done",
+   "at": "2026-10-16 02:20:00",
+   "verdict": "灰色地带 —— 现价 $44.42 不建仓; $40.00 及以下转为通过(分层)",
+   "tiers": {
+    "激进": "$43 - 45 (≤3% 净值)",
+    "稳健": "$38 - 40 (≤8% 净值, 需年报调整后 EPS ≥ $4.99)",
+    "保守": "$33 - 36 (≤10% 净值, 需无第二次商誉减值)"
+   },
+   "verification": "09-verification-basis.txt (financial_rigor.py 原文)",
+   "info_richness": "B"
+  }
+ },
+ "corrections": [],
+ "finished": "2026-10-16 02:20:00"
+}

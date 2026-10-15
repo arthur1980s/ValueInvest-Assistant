@@ -1,0 +1,45 @@
+name: selftest
+
+# 轻量自检 CI：只验证「代码可运行 + 示例可复现」，不跑任何数据依赖/联网步骤。
+# 仓库只发布 runs/T-20261014 与 runs/VZ-20261014 两个示例，CI 环境没有更全的数据，
+# 也不应向外取数（避免 CI 依赖网络与 SEC/行情源的可用性）。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  selftest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10          # 超时即 FAIL（防挂死），不重试
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 1) 纯语法编译：不装任何第三方包，先在最小环境下暴露语法/缩进错误
+      - name: 语法编译（stdlib，无需依赖）
+        run: python -m py_compile datapack.py verify_run.py render_report.py tools/financial_rigor.py
+
+      # 2) 按 requirements.txt 全文安装：验证文档化的环境在干净 runner 上可复现
+      - name: 安装依赖（requirements.txt）
+        run: pip install -r requirements.txt
+
+      # 3) 渲染器自检：11 项断言（自包含 / 关键内容在位 / 缺件降级 / 三档抽取 / 结论上色）
+      - name: 渲染器自检
+        run: python render_report.py --selftest
+
+      # 4) 合规门：示例运行必须判 PASS（缺结论/出处/价格区间/风控 一律非 0 退出）
+      - name: 合规门（示例运行 T）
+        run: python verify_run.py runs/T-20261014
+
+      # 5) 事实包离线结构校验（不联网）
+      - name: 事实包结构校验（示例运行 T）
+        run: python datapack.py --verify runs/T-20261014
+
+      # 6) 确定性计算工具可执行（第三方代码 tools/financial_rigor.py）
+      - name: 确定性计算工具
+        run: python tools/financial_rigor.py verify-valuation --price 44.42 --eps 3.84 --dividend 2.08

@@ -1,0 +1,183 @@
+{
+ "ticker": "VZ",
+ "market": "US",
+ "sources": {
+  "financials": "SEC EDGAR XBRL companyfacts（10-K 年度）",
+  "price": "Nasdaq API api.nasdaq.com/api/quote/<sym>/historical",
+  "second_source": "见 cross_check（若缺则本包为单源：SEC 一手 + Nasdaq 行情）"
+ },
+ "missing": [
+  "每股分红 2026 仅含 1 个季度（XBRL 未逐季申报全部季度）⇒ 该年 DPS 与据此算出的股息率被**低估**，勿直接当年度分红额使用",
+  "每股分红 2025 仅含 3 个季度（XBRL 未逐季申报全部季度）⇒ 该年 DPS $2.08 与据此算出的股息率 4.68% 被**低估**，实际全年 DPS 更高，勿直接当年度分红额使用",
+  "股东权益（StockholdersEquity）未从 XBRL 取到（公司可能用其他标签）⇒ 本包不算 PB，估值须另取账面"
+ ],
+ "verification": [
+  {
+   "check": "季度口径来源",
+   "note": "SEC companyfacts 滞后于最新申报；季度/TTM 数据取自 2026-07-31 申报的 10-Q 原文（0000732712-26-000046）"
+  },
+  {
+   "check": "市值自算",
+   "note": "price × SEC 股本 = 187.35B USD；第二独立市值来源不可得时不得声称已双源验证"
+  }
+ ],
+ "cik": 732712,
+ "entity_name": "VERIZON COMMUNICATIONS INC",
+ "xbrl_tags_used": {
+  "revenue_net": "Revenues",
+  "np": "NetIncomeLoss",
+  "ocf": "NetCashProvidedByUsedInOperatingActivities",
+  "assets": "Assets",
+  "goodwill": "Goodwill",
+  "eps_diluted": "EarningsPerShareDiluted",
+  "dividends_per_share": "CommonStockDividendsPerShareDeclared（季度去重后按财年加总）",
+  "shares_out": "EntityCommonStockSharesOutstanding"
+ },
+ "financials_annual": {
+  "2025": {
+   "revenue_net": 138191000000,
+   "np": 17174000000,
+   "ocf": 37137000000,
+   "assets": 404258000000,
+   "goodwill": 22841000000,
+   "eps_diluted": 4.06,
+   "dividends_per_share": 2.08,
+   "shares_out": 4217684168,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  },
+  "2024": {
+   "revenue_net": 134788000000,
+   "np": 17506000000,
+   "ocf": 36912000000,
+   "assets": 384711000000,
+   "goodwill": 22841000000,
+   "eps_diluted": 4.14,
+   "dividends_per_share": 2.02,
+   "shares_out": 4209703958,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  },
+  "2023": {
+   "revenue_net": 133974000000,
+   "np": 11614000000,
+   "ocf": 37475000000,
+   "assets": 380255000000,
+   "goodwill": 22843000000,
+   "eps_diluted": 2.75,
+   "dividends_per_share": 1.98,
+   "shares_out": 4204272443,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  },
+  "2022": {
+   "revenue_net": 136835000000,
+   "np": 21256000000,
+   "ocf": 37141000000,
+   "assets": 379680000000,
+   "goodwill": 28671000000,
+   "eps_diluted": 5.06,
+   "dividends_per_share": 1.94,
+   "shares_out": 4199882937,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  },
+  "2021": {
+   "revenue_net": 133613000000,
+   "np": 22065000000,
+   "ocf": 39539000000,
+   "assets": 366596000000,
+   "goodwill": 28603000000,
+   "eps_diluted": 5.32,
+   "dividends_per_share": 1.91,
+   "shares_out": 4197823662,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  },
+  "2020": {
+   "revenue_net": 128292000000,
+   "np": 17801000000,
+   "ocf": 41768000000,
+   "assets": 316481000000,
+   "goodwill": 24773000000,
+   "eps_diluted": 4.3,
+   "dividends_per_share": 1.87,
+   "shares_out": 4138148588,
+   "_note": "美股银行/金融：无毛利率、净利率口径，OCF 含贷款投放不具可比性"
+  }
+ },
+ "snapshot": {
+  "price": 44.42,
+  "price_date": "2026-10-14",
+  "price_adj": "unadjusted(实际成交价)",
+  "currency": "USD",
+  "shares_out_sec": 4217684168,
+  "market_cap": 187349530742.56,
+  "market_cap_unit": "USD"
+ },
+ "price_stats": {
+  "ret_1y_pct": 9.5,
+  "ret_5y_pct": -15.0,
+  "high_5y": 55.51,
+  "low_5y": 10.5999,
+  "pct_below_5y_high": 20.0
+ },
+ "quarters": {
+  "latest_10q": {
+   "accession": "0000732712-26-000046",
+   "filed": "2026-07-31",
+   "instance": "https://www.sec.gov/Archives/edgar/data/732712/000073271226000046/vz-20260630_htm.xml"
+  },
+  "facts": {
+   "EarningsPerShareDiluted|2025-06-30|90": 1.18,
+   "EarningsPerShareDiluted|2025-06-30|180": 2.34,
+   "EarningsPerShareDiluted|2026-06-30|90": 0.92,
+   "EarningsPerShareDiluted|2026-06-30|180": 2.12,
+   "NetIncomeLoss|2025-06-30|90": 5003000000.0,
+   "NetIncomeLoss|2025-06-30|180": 9882000000.0,
+   "NetIncomeLoss|2026-06-30|90": 3835000000.0,
+   "NetIncomeLoss|2026-06-30|180": 8880000000.0,
+   "Revenues|2025-06-30|90": 34504000000.0,
+   "Revenues|2025-06-30|180": 67989000000.0,
+   "Revenues|2026-06-30|90": 34253000000.0,
+   "Revenues|2026-06-30|180": 68693000000.0
+  },
+  "eps_latest_quarter": 0.92,
+  "eps_current_h1": 2.12,
+  "eps_prior_h1": 2.34,
+  "eps_h1_yoy_pct": -9.4
+ },
+ "valuation": {
+  "pe_fy_end": {
+   "current_on_latest_fy_eps": 10.9,
+   "pct_in_available_years": 40.0,
+   "min": 7.35,
+   "max": 15.4,
+   "median": 12.73,
+   "years_covered": [
+    2016,
+    2025
+   ]
+  },
+  "dividend_yield_pct": 4.68,
+  "dps_latest_fy": 2.08,
+  "dps_fy": 2025,
+  "dps_quarters_reported": 3,
+  "pe_on_latest_quarter_annualized": {
+   "quarter_eps": 0.92,
+   "annualized_eps": 3.68,
+   "pe": 12.07,
+   "note": "单季年化，波动的 Markets 业务会被放大，仅作边界参考"
+  },
+  "pe_on_ttm_eps": {
+   "ttm_eps": 3.84,
+   "pe": 11.57,
+   "formula": "上一财年 EPS 4.06 − 上年同期半年 2.34 + 本期半年 2.12（全部来自 SEC 10-K/10-Q）"
+  }
+ },
+ "shares": {
+  "sec_shares_outstanding": 4217684168,
+  "from_np_common_over_eps": null
+ },
+ "cross_check": {
+  "sources": [],
+  "values": {}
+ },
+ "business_note": "美股通用：行业专属指标（银行的 CET1/效率比率/净息差、电信的折旧摊销/资本开支强度、工业的自由现金流口径等）在 10-K 正文而非 XBRL，本脚本不取；OCF 须结合业态解读（银行含贷款投放、电信受大额 capex 支配），不与工商企业简单比较。",
+ "generated_at": "2026-10-15 21:31:23"
+}
